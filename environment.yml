@@ -1,0 +1,53 @@
+name: wildfire_whisperer
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - python=3.11
+
+  # --- 1. THE DATA CUBE FOUNDATION (Sentinel-2 + SIF) ---
+  - pystac-client      # Searches the Copernicus Data Space for Sentinel-2 and TROPOMI scenes
+  - stackstac          # Turns search results into a 4-D labelled array (time × band × y × x)
+  - odc-stac           # Alternative cube loader from the Open Data Cube project for Sentinel-2 data
+  - xarray>=2026.2.0   # Core data structure — labelled multidimensional arrays, similar to R's array but with named coordinates
+  - zarr<3             # Chunked storage format for large arrays; pinned to v2 until v3 stabilises
+  - dask               # Runs computations in parallel without loading the full dataset into memory
+  - rioxarray          # Adds coordinate-system-aware clipping and reprojection to xarray
+  - s3fs               # Allows reading files directly from cloud storage (S3) without downloading first
+  - awscli             # AWS command-line interface for managing S3 buckets and credentials
+
+  # --- 2. SENTINEL-2 SPECIALIZED TOOLS ---
+  - s2cloudless        # Probabilistic cloud masking — more accurate than the built-in SCL band
+  - arosics            # Sub-pixel co-registration so Sentinel-2 tiles align with the crop mask
+
+  # --- 3. S5P / TROPOMI SWATH HANDLING ---
+  - satpy              # Reads and resamples raw TROPOMI swath files (irregular satellite orbits)
+  - pyresample         # Reprojects the irregular SIF swath onto a regular Sentinel-2 grid
+  - h5netcdf           # Reads the HDF5/NetCDF4 format that TROPOMI data is distributed in
+  - netcdf4            # Secondary NetCDF reader that xarray and rasterio use as a fallback
+  - boto3              # Required for PR #2's reliable CDSE/TROPOMI reading
+  - python-dotenv      # Required to load the ~/mystorage/.env file
+
+  # --- 4. CROP MASKING & SPATIAL ENGINE ---
+  - geopandas          # Loads and manipulates vector files (e.g. DLR sugar beet field polygons)
+  - rasterio           # Low-level raster file reading and pixel-level operations
+  - shapely            # Geometric operations on vector shapes (intersections, buffers, etc.)
+
+  # --- 5. BAYESIAN MODELING ---
+  - pymc>=5.10.0       # Builds and samples Bayesian statistical models
+  - bambi              # Formula-based interface on top of PyMC, similar in style to lme4 in R
+  - arviz              # Visualises and diagnoses posterior distributions from Bayesian models
+
+  # --- 6. NOTEBOOKS ---
+  - ipython            # Enhanced interactive Python shell for running notebooks
+  - ipykernel          # Registers this conda environment as a selectable kernel in JupyterLab
+
+  # --- 7. DEV UTILS & TESTING ---
+  - pytest             # Runs the unit tests in /tests
+  - tqdm               # Displays progress bars for long-running loops
+  - matplotlib         # Base plotting library
+  - seaborn            # Statistical plots built on top of matplotlib
+  - pip                # Needed to install packages not available on conda-forge (see below)
+  - pip:
+    - openeo           # Client for the openEO / CDSE processing backend
+    - sentinelsat      # Fallback client for manual downloads from the Copernicus Hub
