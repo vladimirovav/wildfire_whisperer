@@ -32,6 +32,8 @@ dependencies:
   - geopandas          # Loads and manipulates vector files (e.g. DLR sugar beet field polygons)
   - rasterio           # Low-level raster file reading and pixel-level operations
   - shapely            # Geometric operations on vector shapes (intersections, buffers, etc.)
+  - fiona              # Reads and writes vector files (e.g. GeoJSON, Shapefile)
+  - dbfread            # Reads DBF files ( Shapefile attribute tables )
 
   # --- 5. BAYESIAN MODELING ---
   - pymc>=5.10.0       # Builds and samples Bayesian statistical models
