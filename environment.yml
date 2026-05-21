@@ -53,3 +53,4 @@ dependencies:
   - pip:
     - openeo           # Client for the openEO / CDSE processing backend
     - sentinelsat      # Fallback client for manual downloads from the Copernicus Hub
+    - earthaccess      # Fallback client for manual downloads from NASA Earthdata
