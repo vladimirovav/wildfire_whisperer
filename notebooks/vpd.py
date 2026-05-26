@@ -92,7 +92,8 @@ if missing:
 else:
     print('No missing days!')
 
-# Generate CSV
-df.to_csv('vpd.csv', index=False)
-print('Final shape:', df.shape)
-print('Saved to vpd.csv')
+# Generate Shapefile
+gdf = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df.longitude, df.latitude), crs='EPSG:4326')
+gdf.to_file('vpd.shp')
+print('Final shape:', gdf.shape)
+print('Saved to vpd.shp')
